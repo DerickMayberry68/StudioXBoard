@@ -1,0 +1,46 @@
+<div class="flex gap-6 overflow-x-auto pb-6 h-[calc(100vh-120px)]">
+  @for (column of columns(); track column.id) {
+    <div class="flex-shrink-0 w-80">
+      <div class="bg-base-200 rounded-lg p-4 shadow-xl">
+        <h3 class="font-bold text-lg mb-4" [style.color]="column.color">
+          {{ column.name }} ({{ column.cards.length }})
+        </h3>
+
+        <div cdkDropList [cdkDropListData]="column.cards" 
+             (cdkDropListDropped)="drop($event)" 
+             class="min-h-96">
+          @defer (on viewport) {
+            @for (card of column.cards; track card.id) {
+              <div cdkDrag 
+                   class="bg-base-100 rounded-lg p-4 mb-3 shadow cursor-move hover:shadow-lg transition">
+                <h4 class="font-semibold">{{ card.title }}</h4>
+                @if (card.description) {
+                  <p class="text-sm text-gray-600 mt-2">{{ card.description }}</p>
+                }
+                <div class="badge badge-outline badge-sm mt-3">Effort: {{ card.effort }}h</div>
+              </div>
+            }
+          } @placeholder {
+            <div>
+              <div class="skeleton h-32 mb-3"></div>
+              <div class="skeleton h-32 mb-3"></div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Add Card Column -->
+  <div class="flex-shrink-0 w-80">
+    <div class="bg-base-200 rounded-lg p-4 shadow-xl">
+      <h3 class="font-bold text-lg mb-4 text-primary">Add New Task</h3>
+      <input [(ngModel)]="newTitle" placeholder="Task title" class="input input-bordered w-full mb-3" />
+      <textarea [(ngModel)]="newDescription" placeholder="Paste huge requirement here..." class="textarea textarea-bordered w-full mb-3" rows="4"></textarea>
+      <div class="flex gap-2">
+        <button (click)="decompose()" class="btn btn-secondary btn-sm">Decompose Requirement</button>
+        <button (click)="addCard()" class="btn btn-primary btn-sm flex-1">Add Card</button>
+      </div>
+    </div>
+  </div>
+</div>
